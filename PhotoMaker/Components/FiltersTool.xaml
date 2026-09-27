@@ -1,0 +1,143 @@
+﻿<UserControl x:Class="PhotoMaker.Client.Components.FiltersTool"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PhotoMaker.Client.Components"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:b="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+             d:DesignHeight="450" d:DesignWidth="800"
+>
+    <!--  Контент  -->
+    <Border BorderBrush="Gray" Height="Auto" Background="WhiteSmoke" BorderThickness="0.7" CornerRadius="3">
+        <StackPanel Orientation="Vertical" Margin="5">
+            <!--  Информационные параметры фильтрации  -->
+            <StackPanel Orientation="Horizontal" IsEnabled="{Binding FiltersToolVM.IsEnabled}">
+                <TextBlock Text="Вкл/выкл: " FontWeight="DemiBold" VerticalAlignment="Center"/>
+                <CheckBox IsChecked="{Binding FiltersToolVM.IsFiltersToolOn, Mode=TwoWay}" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <TextBlock Height="20"/>
+
+            <StackPanel Orientation="Vertical" IsEnabled="{Binding FiltersToolVM.IsParametersEnabled}">
+                <!--  Выбор типа фильтрации  -->
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="FilterMode: " VerticalAlignment="Center"/>
+                    <ComboBox Width="100" SelectedValue="{Binding FiltersToolVM.ActiveFilter}" ItemsSource="{Binding FiltersToolVM.FilterModes}" DisplayMemberPath="Name" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Rectangle Height="1" Fill="LightGray" HorizontalAlignment="Stretch" Margin="0,15,0,5"/>
+
+                <TextBlock Text="Ядро" FontWeight="DemiBold" Margin="0,0,0,20"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <!--  Радиус ядра фильтра по ширине  -->
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="RadiusX: " VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding FiltersToolVM.RadiusX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding FiltersToolVM.IsRadiusEnabled}" Width="30" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+
+                    <TextBlock Width="15" />
+
+                    <!--  Радиус ядра фильтра по высоте  -->
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="RadiusY: " VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding FiltersToolVM.RadiusY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding FiltersToolVM.IsRadiusEnabled}" Width="30" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+
+                    <TextBlock Width="15" />
+
+                    <Button Content="Сгенерировать" Command="{Binding FiltersToolVM.GenerateKernelCommand}" Padding="3" BorderBrush="Silver">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <TextBlock Width="15"/>
+
+                    <Button Content="Очистить" Command="{Binding FiltersToolVM.ClearKernelCommand}" Padding="3" BorderBrush="Silver">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+
+                <!--  Параметры фильтра Гаусса  -->
+                <StackPanel Orientation="Horizontal" IsEnabled="{Binding FiltersToolVM.IsGaussFillingEnabled}">
+                    <TextBlock Text="Sigma (размытие Гаусса): " VerticalAlignment="Center"/>
+
+                    <TextBox Text="{Binding FiltersToolVM.Sigma, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=F2}" Width="30" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+
+                    <TextBlock Width="15"/>
+
+                    <Button Content="Заполнить Гауссиан" Command="{Binding FiltersToolVM.FillGaussianCommand}" Width="165" Padding="3" BorderBrush="Silver">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+                
+                <!--  Сумма элементов ядра фильтра  -->
+                <StackPanel Orientation="Horizontal" Visibility="{Binding FiltersToolVM.KernelVisibility}" Margin="0,10,0,10">
+                    <TextBlock Text="Brightness: " VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding FiltersToolVM.Brightness}"/>
+                </StackPanel>
+
+                <!--  Ядро фильтра  -->
+                <Border Visibility="{Binding FiltersToolVM.KernelVisibility}" BorderBrush="LightGray" Height="Auto" BorderThickness="1.8" CornerRadius="3">
+                    <DataGrid ItemsSource="{Binding FiltersToolVM.Kernel.DefaultView}" 
+                              AutoGenerateColumns="True" 
+                              HeadersVisibility="None"
+                              HorizontalScrollBarVisibility="Visible"
+                              VerticalScrollBarVisibility="Visible"
+                              BorderBrush="Transparent"
+                              Background="White"
+                              BorderThickness="0"
+                              HorizontalGridLinesBrush="Gainsboro"
+                              VerticalGridLinesBrush="Gainsboro"
+                              CanUserAddRows="False"
+                              CanUserResizeColumns="False"
+                              VerticalContentAlignment="Center"
+                              HorizontalContentAlignment="Center"
+                              EnableRowVirtualization="True"
+                              EnableColumnVirtualization="True"
+                              VirtualizingPanel.IsVirtualizing="True"
+                              VirtualizingPanel.VirtualizationMode="Standard"
+                              SelectionUnit="Cell"
+                              Height="294"
+                    >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="CellEditEnding">
+                                <i:InvokeCommandAction Command="{Binding FiltersToolVM.UpdateKernelElementCommand}" PassEventArgsToCommand="True"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#D6EBFF"/>
+                                        <Setter Property="Foreground" Value="Black"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Resources>
+                    </DataGrid>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

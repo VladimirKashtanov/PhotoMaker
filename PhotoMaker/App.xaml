@@ -1,0 +1,13 @@
+﻿<Application x:Class="PhotoMaker.Client.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:PhotoMaker.Client"
+             xmlns:vm="clr-namespace:PhotoMaker.Client.ViewModel"
+             StartupUri="View/MainWindow.xaml"
+>
+    <Application.Resources>
+        <ResourceDictionary>
+            <vm:ViewModelLocator x:Key="Locator"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="PhotoMaker.Client.Components.FourierTool"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PhotoMaker.Client.Components"
+             d:DesignHeight="450" d:DesignWidth="800"
+>
+    <!--  Контент  -->
+    <Border BorderBrush="Gray" Height="Auto" Background="WhiteSmoke" BorderThickness="0.7" CornerRadius="3">
+        <StackPanel Orientation="Vertical" Margin="5">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Grid.Column="0" Text="Вкл/выкл: " FontWeight="DemiBold" VerticalAlignment="Center"/>
+                <CheckBox Grid.Column="1" IsChecked="{Binding FourierToolVM.IsEnabled}" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical" Visibility="{Binding FourierToolVM.FourierTransformVisibility}" Margin="0,10,0,0">
+                <Image Height="430" Source="{Binding FourierToolVM.FourierTransformImageBitmap}" RenderOptions.BitmapScalingMode="HighQuality"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

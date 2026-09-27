@@ -1,0 +1,194 @@
+﻿<UserControl x:Class="PhotoMaker.Client.Components.ImageLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PhotoMaker.Client.Components"
+             xmlns:conv="clr-namespace:PhotoMaker.Client.Infrastructure.Converters"
+             d:Width="450"
+>
+    <!-- Регистрация ресурсов -->
+    <UserControl.Resources>
+        <conv:ImageLayerOpacityConverter x:Key="ImageLayerOpacityConverter"/>
+        <conv:EmptyStringToIntConverter x:Key="EmptyStringToIntConverter"/>
+    </UserControl.Resources>
+
+    <!-- Контент -->
+    <Border BorderBrush="Gray" Background="WhiteSmoke" BorderThickness="0.7" CornerRadius="3">
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="25"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Bitmap для слоя -->
+            <Border Grid.Column="0" ClipToBounds="True" Background="Lavender" BorderBrush="LightSlateGray" BorderThickness="0.9" CornerRadius="3" Height="140" Padding="2">
+                <Image Source="{Binding Bitmap}" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
+            </Border>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+
+                <!-- Характеристики слоя -->
+                <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Имя: " FontWeight="DemiBold"/>
+                        <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Name}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="170"/>
+                    </StackPanel>
+
+                    <Rectangle Height="1" Fill="LightGray" HorizontalAlignment="Stretch" Margin="0,3"/>
+
+                    <DockPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                            <TextBlock Text="Размер: " FontWeight="DemiBold"/>
+                            <TextBlock Text="{Binding ImageSizeString}"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                            <TextBlock Text="DPI: " FontWeight="DemiBold"/>
+                            <TextBlock Text="{Binding ImageDpiString}"/>
+                        </StackPanel>
+
+                        <TextBlock />
+                    </DockPanel>
+                </StackPanel>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="5"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"/>
+
+                    <!-- Наличие цветовых каналов -->
+                    <Grid Grid.Column="1" VerticalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text="R: " VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="G: " VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Grid.Row="2" Text="B: " VerticalAlignment="Center"/>
+
+                        <CheckBox Grid.Column="1" Grid.Row="0" IsChecked="{Binding Path=ChannelR, Mode=TwoWay}" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="1" IsChecked="{Binding Path=ChannelG, Mode=TwoWay}" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="1" Grid.Row="2" IsChecked="{Binding Path=ChannelB, Mode=TwoWay}" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <TextBlock Grid.Column="2"/>
+
+                    <!-- Параметры цветовых преобразований слоев изображения -->
+                    <Grid Grid.Column="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Смещение слоя -->
+                        <DockPanel Grid.Row="0">
+                            <!-- Ось X -->
+                            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                                <TextBlock Text="OffsetX: " VerticalAlignment="Center"/>
+                                <TextBox Text="{Binding OffsetX, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EmptyStringToIntConverter}}" Width="35" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+                            </StackPanel>
+
+                            <!-- Ось Y -->
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                <TextBlock Text="OffsetY: " VerticalAlignment="Center"/>
+                                <TextBox Text="{Binding OffsetY, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EmptyStringToIntConverter}}" Width="35" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+                            </StackPanel>
+
+                            <TextBlock/>
+                        </DockPanel>
+
+                        <!-- Прозрачность слоя -->
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="25"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="Opacity:" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Opacity, Converter={StaticResource ImageLayerOpacityConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="2" Text="% " VerticalAlignment="Center"/>
+                            <Slider Grid.Column="3" TickFrequency="1" Value="{Binding Opacity, Converter={StaticResource ImageLayerOpacityConverter}}" Minimum="0" Maximum="100" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <!-- Режимы наложения -->
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="BlendMode: " VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" SelectedItem="{Binding Path=ActiveBlendMode}" ItemsSource="{Binding Path=BlendModes}" DisplayMemberPath="Name" VerticalAlignment="Center" />
+                        </Grid>
+                    </Grid>
+
+                    <TextBlock Grid.Column="5"/>
+                </Grid>
+            </Grid>
+
+            <!-- Кнопки перемещений слоя -->
+            <Grid Grid.Column="2" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="33"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="33"/>
+                </Grid.RowDefinitions>
+
+                <!-- Перемещение слоя вверх -->
+                <Button Grid.Row="0" Content="▲" Command="{Binding DataContext.MoveLayerUpCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" BorderBrush="Silver">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="3"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <TextBlock Grid.Row="1"/>
+
+                <!-- Кнопка удаления слоя -->
+                <Button Grid.Row="2" Content="⨉" Command="{Binding Path=DataContext.RemoveLayerCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Background="LightCoral" Foreground="White" BorderBrush="Coral">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="3"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <TextBlock Grid.Row="3"/>
+
+                <!-- Перемещение слоя вниз -->
+                <Button Grid.Row="4" Content="▼" Command="{Binding Path=DataContext.MoveLayerDownCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" BorderBrush="Silver">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="3"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>
